@@ -7,7 +7,21 @@ defmodule SpaceCadet.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      description: "A discord wrapper for elixir",
+      project: project(),
+      name: "Space Cadet",
+      source_url: "https://github.com/Leastrio/space_cadet"
+    ]
+  end
+
+  def package do
+    [
+      name: :space_cadet,
+      licenses: ["MIT"],
+      links: %{
+        "Github" => "https://github.com/Leastrio/space_cadet"
+      }
     ]
   end
 
