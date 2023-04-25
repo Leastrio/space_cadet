@@ -43,6 +43,7 @@ defmodule SpaceCadet.MixProject do
       {:castore, "~> 1.0"},
       {:mint, "~> 1.0"},
       {:gen_stage, "~> 1.0.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end
