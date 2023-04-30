@@ -1,4 +1,4 @@
-defmodule SpaceCadet.Model.State do
+defmodule SpaceCadet.Model.ShardState do
   defstruct [
     :token,
     :conn,

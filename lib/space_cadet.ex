@@ -1,3 +1,9 @@
+defmodule SpaceCadet.Bot do
+  def start_link(opts) do
+
+  end
+end
+
 defmodule SpaceCadet.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
@@ -8,8 +14,7 @@ defmodule SpaceCadet.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: SpaceCadet.Worker.start_link(arg)
-      # {SpaceCadet.Worker, arg}
+      {SpaceCadet.Gateway, token: "" }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

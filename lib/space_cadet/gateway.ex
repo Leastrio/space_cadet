@@ -2,23 +2,37 @@ defmodule SpaceCadet.Gateway do
   use GenServer
   require Logger
 
-  alias SpaceCadet.Model.State
+  alias SpaceCadet.Model.ShardState
 
-  def start_link(token) do
+  def start_link(opts \\ []) do
+    token = Keyword.get(opts, :token)
+    GenServer.start_link(__MODULE__, %ShardState{token: token}, name: __MODULE__)
+  end
+
+  def child_spec(opts \\ []) do
+    token = Keyword.get(opts, :token)
     if token == nil do
       raise "Token not provided"
     end
+    id = SpaceCadet.Utils.extract_id(token)
 
-    GenServer.start_link(__MODULE__, %State{token: token}, name: __MODULE__)
+    %{
+      id: gen_atom(id),
+      start: {__MODULE__, :start_link, opts}
+    }
   end
 
-  def init(%State{token: token} = state) do
+  def gen_atom(id) do
+    :"SpaceCadet.Shard.#{id}"
+  end
+
+  def init(%ShardState{token: token} = state) do
     uri = SpaceCadet.Api.request(token, :get, "/gateway/bot").url <> "/?v=10&encoding=etf" |> URI.parse()
     path = uri.path <> "?" <> uri.query
 
     with {:ok, conn} <- Mint.HTTP.connect(:https, uri.host, uri.port),
          {:ok, conn, ref} <- Mint.WebSocket.upgrade(:wss, conn, path, []) do
-            state = %State{state | conn: conn, request_ref: ref}
+            state = %ShardState{state | conn: conn, request_ref: ref}
             {:ok, state}
          else
           {:error, reason} ->
